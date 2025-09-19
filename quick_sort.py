@@ -1,14 +1,4 @@
-def insertion_sort(arr, left=0, right=None):
-    if right is None:
-        right = len(arr) - 1
-    for i in range(left + 1, right + 1):
-        key = arr[i]
-        j = i - 1
-        while j >= left and arr[j] > key:
-            arr[j + 1] = arr[j]
-            j -= 1
-        arr[j + 1] = key
-# In-place Quick Sort (pivot: last item), timing, and plotting for multiple input files
+# In-place Quick Sort (pivot: random item), timing, and plotting for multiple input files
 import os
 import time
 import matplotlib.pyplot as plt
@@ -16,10 +6,6 @@ import random
 
 def quick_sort(arr, low, high):
     while low < high:
-        # Use insertion sort for small subarrays
-        if high - low + 1 <= 20:
-            insertion_sort(arr, low, high)
-            break
         pi = partition(arr, low, high)
         # Tail call elimination: sort smaller part first
         if pi - low < high - pi:
@@ -94,21 +80,9 @@ def main():
         results[key]['times'].append(avg_time)
         print(f"File: {filename} | Input size: {n}, Average time over {num_runs} runs: {avg_time:.6f} seconds")
 
-    # Plotting
-    plt.figure(figsize=(10,6))
-    if results['random']['sizes']:
-        plt.plot(results['random']['sizes'], results['random']['times'], marker='o', color='red', label='Random')
-    if results['sorted']['sizes']:
-        plt.plot(results['sorted']['sizes'], results['sorted']['times'], marker='o', color='blue', label='Sorted')
-    if results['reverse_sorted']['sizes']:
-        plt.plot(results['reverse_sorted']['sizes'], results['reverse_sorted']['times'], marker='o', color='green', label='Reverse Sorted')
-    plt.xlabel('Input Size')
-    plt.ylabel('Average Execution Time (seconds)')
-    plt.title('Quick Sort: Input Size vs Average Execution Time')
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+    return results
+def get_results():
+    return main()
 
 if __name__ == "__main__":
     main()

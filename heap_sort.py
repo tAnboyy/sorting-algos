@@ -64,22 +64,10 @@ def main():
         results[key]['sizes'].append(n)
         results[key]['times'].append(avg_time)
         print(f"File: {filename} | Input size: {n}, Average time over {num_runs} runs: {avg_time:.6f} seconds")
+    return results
 
-    # Plotting
-    plt.figure(figsize=(10,6))
-    if results['random']['sizes']:
-        plt.plot(results['random']['sizes'], results['random']['times'], marker='o', color='red', label='Random')
-    if results['sorted']['sizes']:
-        plt.plot(results['sorted']['sizes'], results['sorted']['times'], marker='o', color='blue', label='Sorted')
-    if results['reverse_sorted']['sizes']:
-        plt.plot(results['reverse_sorted']['sizes'], results['reverse_sorted']['times'], marker='o', color='green', label='Reverse Sorted')
-    plt.xlabel('Input Size')
-    plt.ylabel('Average Execution Time (seconds)')
-    plt.title('Heap Sort: Input Size vs Average Execution Time')
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+def get_results():
+    return main()
 
 if __name__ == "__main__":
     main()
