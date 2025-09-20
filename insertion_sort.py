@@ -21,6 +21,7 @@ def read_input_file(filepath):
 		return [int(x) for x in content.split()]
 
 def main():
+	print("Running Insertion Sort...")
 	input_dir = 'inputs_DSA_project'
 	def extract_size(filename):
 		parts = filename.split('_')
@@ -40,8 +41,12 @@ def main():
 		filepath = os.path.join(input_dir, filename)
 		arr = read_input_file(filepath)
 		n = len(arr)
-		if n > 20000:
-			print(f"File: {filename} | Input size: {n} -- Skipped (too large for insertion sort)")
+		# Skip random and reverse sorted inputs
+		if filename.startswith('random') or filename.startswith('reverse_sorted'):
+			print(f"File: {filename} | Input size: {n} -- Skipped (random or reverse sorted input)")
+			continue
+		if n > 60000:
+			print(f"File: {filename} | Input size: {n} -- Skipped (input size > 60000)")
 			continue
 		times = []
 		num_runs = 3 if n > 10000 else 5
@@ -63,6 +68,7 @@ def main():
 		results[key]['sizes'].append(n)
 		results[key]['times'].append(avg_time)
 		print(f"File: {filename} | Input size: {n}, Average time over {num_runs} runs: {avg_time:.6f} seconds")
+	print("******* Insertion Sort Finished *******")
 	return results
 
 def get_results():

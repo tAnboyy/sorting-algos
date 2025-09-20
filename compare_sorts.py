@@ -2,6 +2,8 @@
 import os
 import importlib.util
 import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
 
 SORT_FILES = [
     'insertion_sort.py',
@@ -48,19 +50,50 @@ def main():
             if key in results:
                 RESULTS[key][label] = (results[key]['sizes'], results[key]['times'])
 
+
     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
     input_types = ['random', 'sorted', 'reverse_sorted']
+    table_data = []
     for idx, key in enumerate(input_types):
         ax = axes[idx]
         for label in SORT_LABELS:
             if label in RESULTS[key]:
                 sizes, times = RESULTS[key][label]
                 ax.plot(sizes, times, marker='o', label=label)
+                # Collect data for table
+                for size, t in zip(sizes, times):
+                    table_data.append({
+                        'Input Type': key.capitalize(),
+                        'Sorting Algorithm': label,
+                        'Input Size': size,
+                        'Execution Time (s)': t
+                    })
         ax.set_xlabel('Input Size')
         ax.set_ylabel('Avg. Execution Time (s)')
         ax.set_title(f'{key.capitalize()} Inputs')
         ax.grid(True)
         ax.legend()
+    plt.tight_layout()
+    plt.show()
+
+    # Create and plot a simple table using pandas and matplotlib
+    df = pd.DataFrame(table_data)
+    df = df.sort_values(['Sorting Algorithm', 'Input Type', 'Input Size'])
+    # Display only the relevant columns in a simple table
+    display_df = df[['Sorting Algorithm', 'Input Type', 'Input Size', 'Execution Time (s)']]
+    fig, ax = plt.subplots(figsize=(12, min(1 + 0.3 * len(display_df), 20)))
+    ax.axis('off')
+    table = ax.table(
+        cellText=display_df.values,
+        colLabels=display_df.columns,
+        loc='center',
+        cellLoc='center',
+        colLoc='center',
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.auto_set_column_width(col=list(range(len(display_df.columns))))
+    plt.title('Execution Times for Sorting Algorithms')
     plt.tight_layout()
     plt.show()
 

@@ -37,6 +37,7 @@ def read_input_file(filepath):
         return [int(x) for x in content.split()]
 
 def main():
+    print("Running Merge Sort...")
     input_dir = 'inputs_DSA_project'
     def extract_size(filename):
         parts = filename.split('_')
@@ -79,6 +80,7 @@ def main():
         results[key]['sizes'].append(n)
         results[key]['times'].append(avg_time)
         print(f"File: {filename} | Input size: {n}, Average time over {num_runs} runs: {avg_time:.6f} seconds")
+    print("******* Merge Sort Finished *******")
     return results
 
 def get_results():
