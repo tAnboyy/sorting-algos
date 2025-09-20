@@ -1,11 +1,9 @@
-# Compare sorting algorithms: plot random, sorted, reverse sorted input timings for all algorithms
+# This file compares sorting algorithms and plots random, sorted, reverse sorted input timings for all algorithms
 
 import os
 import importlib.util
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
-import numpy as np
 import random
 
 SORT_FILES = [
@@ -37,7 +35,7 @@ RESULTS = {
 }
 
 
-# Each sort file should have a function: get_results(inputs_dict) returning a dict like {'random': {'sizes': [...], 'times': [...]}, ...}
+# each sort file has a function: get_results(inputs_dict) returning a dict
 def get_results_from_file(file_path, inputs_dict):
     spec = importlib.util.spec_from_file_location('sortmod', file_path)
     mod = importlib.util.module_from_spec(spec)
@@ -48,10 +46,10 @@ def get_results_from_file(file_path, inputs_dict):
 
 def main():
 
-    # Use only the specified sizes
+    # input sizes as per requirement
     sizes = [1000, 2000, 3000, 4000, 5000, 10000, 20000, 40000, 50000, 60000, 80000, 90000, 100000]
 
-    # Generate dynamic inputs for each type and size
+    # generating dynamic inputs for each type and size
     dynamic_inputs = {'random': {}, 'sorted': {}, 'reverse_sorted': {}}
     for size in sizes:
         arr = [random.randint(0, 10**6) for _ in range(size)]
@@ -60,7 +58,7 @@ def main():
         dynamic_inputs['sorted'][size] = arr_sorted.copy()
         dynamic_inputs['reverse_sorted'][size] = arr_sorted[::-1]
 
-    # For each sorting algorithm, call get_results(inputs_dict)
+    # For each sorting algorithm, calling get_results(inputs_dict)
     for sort_file, label in zip(SORT_FILES, SORT_LABELS):
         file_path = os.path.join(os.path.dirname(__file__), sort_file)
         results = get_results_from_file(file_path, dynamic_inputs)
@@ -78,7 +76,7 @@ def main():
             if label in RESULTS[key]:
                 sizes, times = RESULTS[key][label]
                 ax.plot(sizes, times, marker='o', label=label)
-                # Collect data for table
+                #collecting data for table
                 for size, t in zip(sizes, times):
                     table_data.append({
                         'Input Type': key.capitalize(),
@@ -94,10 +92,10 @@ def main():
     plt.tight_layout()
     plt.show()
 
-    # Create and plot a simple table using pandas and matplotlib
+    # Creating and plotting a simple table using pandas and matplotlib
     df = pd.DataFrame(table_data)
     df = df.sort_values(['Sorting Algorithm', 'Input Type', 'Input Size'])
-    # Display only the relevant columns in a simple table
+    # displaying only the relevant columns in a simple table
     display_df = df[['Sorting Algorithm', 'Input Type', 'Input Size', 'Execution Time (s)']]
     fig, ax = plt.subplots(figsize=(12, min(1 + 0.3 * len(display_df), 20)))
     ax.axis('off')

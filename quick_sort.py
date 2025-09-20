@@ -1,11 +1,11 @@
-# In-place Quick Sort (pivot: random item), timing, and plotting for multiple input files
-import time
+# In-place Quick Sort (pivot: random item)
 import random
+import time
 
 def quick_sort(arr, low, high):
     while low < high:
         pi = partition(arr, low, high)
-        # Tail call elimination: sort smaller part first
+        # Tail call elimination: we are sorting smaller part first
         if pi - low < high - pi:
             quick_sort(arr, low, pi - 1)
             low = pi + 1
@@ -14,7 +14,7 @@ def quick_sort(arr, low, high):
             high = pi - 1
 
 def partition(arr, low, high):
-    # Select a random pivot and swap with high
+    # Selecting a random pivot and swapping with high
     pivot_index = random.randint(low, high)
     arr[pivot_index], arr[high] = arr[high], arr[pivot_index]
     pivot = arr[high]
@@ -32,7 +32,6 @@ def main(inputs_dict = None):
         print("No input provided.")
         return
     else:
-        # Dynamic input handling
         results = {
             'random': {'sizes': [], 'times': []},
             'sorted': {'sizes': [], 'times': []},

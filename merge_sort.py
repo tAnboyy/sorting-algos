@@ -1,13 +1,17 @@
 import time
 
+# Recursive merge sort implementation - sorts the array in place
 def merge_sort(arr):
     if len(arr) > 1:
         mid = len(arr) // 2
+        # splitting the array into two halves
         L = arr[:mid]
         R = arr[mid:]
+        # Recursively sorting both halves
         merge_sort(L)
         merge_sort(R)
         i = j = k = 0
+        # Merging the sorted halves back into arr
         while i < len(L) and j < len(R):
             if L[i] < R[j]:
                 arr[k] = L[i]
@@ -16,10 +20,12 @@ def merge_sort(arr):
                 arr[k] = R[j]
                 j += 1
             k += 1
+        # Copying any remaining elements from L
         while i < len(L):
             arr[k] = L[i]
             i += 1
             k += 1
+        # Copying any remaining elements from R
         while j < len(R):
             arr[k] = R[j]
             j += 1
@@ -32,6 +38,7 @@ def main(inputs_dict):
         'sorted': {'sizes': [], 'times': []},
         'reverse_sorted': {'sizes': [], 'times': []}
     }
+    # here we are benchmarking merge sort for each input type and size
     for key in ['random', 'sorted', 'reverse_sorted']:
         for n, arr in inputs_dict.get(key, {}).items():
             times = []

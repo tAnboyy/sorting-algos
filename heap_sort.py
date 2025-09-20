@@ -1,9 +1,7 @@
-# Heap Sort (vector-based, insert one item at a time), timing, and plotting for multiple input files
-import os
+# Heap Sort (vector-based, inserting one item at a time)
 import time
-import matplotlib.pyplot as plt
 
-# In-place heap sort implementation (no heapq)
+# In-place heap sort implementation (we are not using heapq)
 def heapify(arr, n, i):
     largest = i
     l = 2 * i + 1
@@ -18,21 +16,13 @@ def heapify(arr, n, i):
 
 def heap_sort(arr):
     n = len(arr)
-    # Build max heap
+    # max heap
     for i in range(n // 2 - 1, -1, -1):
         heapify(arr, n, i)
-    # Extract elements one by one
+    # Extracting elements one by one
     for i in range(n - 1, 0, -1):
         arr[0], arr[i] = arr[i], arr[0]
         heapify(arr, i, 0)
-
-def read_input_file(filepath):
-    with open(filepath, 'r') as f:
-        content = f.read().strip()
-        if content.startswith('[') and content.endswith(']'):
-            import ast
-            return ast.literal_eval(content)
-        return [int(x) for x in content.split()]
 
 def main(inputs_dict):
     print("Running Heap Sort...")

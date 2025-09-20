@@ -1,23 +1,14 @@
 import time
 
+# we are using standard insertion sort implementation
 def insertion_sort(arr):
-    def binary_search(sub_arr, val, start, end):
-        while start < end:
-            mid = (start + end) // 2
-            if sub_arr[mid] < val:
-                start = mid + 1
-            else:
-                end = mid
-        return start
-
     for i in range(1, len(arr)):
         key = arr[i]
-        # Find the insertion point using binary search
-        insert_pos = binary_search(arr, key, 0, i)
-        # Shift elements to the right to make space
-        for j in range(i, insert_pos, -1):
-            arr[j] = arr[j - 1]
-        arr[insert_pos] = key
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
 
 def main(inputs_dict):
     print("Running Insertion Sort...")

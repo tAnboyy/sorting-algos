@@ -1,4 +1,4 @@
-# Modified Quick Sort (median-of-three pivot, insertion sort for small subarrays), timing, and plotting for multiple input files
+# Modified Quick Sort (median-of-three pivot, insertion sort for small subarrays)
 import time
 
 def insertion_sort(arr, left=0, right=None):
@@ -40,7 +40,7 @@ def modified_quick_sort(arr, low, high):
             pivot_index = median_of_three(arr, low, high)
             arr[pivot_index], arr[high] = arr[high], arr[pivot_index]
             pi = partition(arr, low, high)
-            # Tail call optimization: sort smaller part first
+            # Tail call optimization ie- sorting smaller part first
             if pi - low < high - pi:
                 modified_quick_sort(arr, low, pi - 1)
                 low = pi + 1

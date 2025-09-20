@@ -1,0 +1,5 @@
+There is a file for each of the sorting algorithm.
+We use another file compare_sorts.py to dynamically generate inputs and pass to each sorting algorithm file, which then plots the results returned by each sorting algorithm.
+
+ONLY 1 FILE TO EXECUTE-
+Execute compare_sorts.py to obtain the final plotting of the execution.
