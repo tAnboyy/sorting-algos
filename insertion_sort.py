@@ -1,78 +1,48 @@
-# Insertion Sort, timing, and plotting for multiple input files
-import os
 import time
-import matplotlib.pyplot as plt
 
 def insertion_sort(arr):
-	for i in range(1, len(arr)):
-		key = arr[i]
-		j = i - 1
-		while j >= 0 and arr[j] > key:
-			arr[j + 1] = arr[j]
-			j -= 1
-		arr[j + 1] = key
+    def binary_search(sub_arr, val, start, end):
+        while start < end:
+            mid = (start + end) // 2
+            if sub_arr[mid] < val:
+                start = mid + 1
+            else:
+                end = mid
+        return start
 
-def read_input_file(filepath):
-	with open(filepath, 'r') as f:
-		content = f.read().strip()
-		if content.startswith('[') and content.endswith(']'):
-			import ast
-			return ast.literal_eval(content)
-		return [int(x) for x in content.split()]
+    for i in range(1, len(arr)):
+        key = arr[i]
+        # Find the insertion point using binary search
+        insert_pos = binary_search(arr, key, 0, i)
+        # Shift elements to the right to make space
+        for j in range(i, insert_pos, -1):
+            arr[j] = arr[j - 1]
+        arr[insert_pos] = key
 
-def main():
-	print("Running Insertion Sort...")
-	input_dir = 'inputs_DSA_project'
-	def extract_size(filename):
-		parts = filename.split('_')
-		for part in reversed(parts):
-			if part.isdigit():
-				return int(part)
-			if part.endswith('.txt') and part[:-4].isdigit():
-				return int(part[:-4])
-		return 0
-	input_files = sorted([f for f in os.listdir(input_dir) if f.endswith('.txt')], key=extract_size)
-	results = {
-		'random': {'sizes': [], 'times': []},
-		'sorted': {'sizes': [], 'times': []},
-		'reverse_sorted': {'sizes': [], 'times': []}
-	}
-	for filename in input_files:
-		filepath = os.path.join(input_dir, filename)
-		arr = read_input_file(filepath)
-		n = len(arr)
-		# Skip random and reverse sorted inputs
-		if filename.startswith('random') or filename.startswith('reverse_sorted'):
-			print(f"File: {filename} | Input size: {n} -- Skipped (random or reverse sorted input)")
-			continue
-		if n > 60000:
-			print(f"File: {filename} | Input size: {n} -- Skipped (input size > 60000)")
-			continue
-		times = []
-		num_runs = 3 if n > 10000 else 5
-		for _ in range(num_runs):
-			arr_copy = arr.copy()
-			start = time.perf_counter()
-			insertion_sort(arr_copy)
-			end = time.perf_counter()
-			times.append(end - start)
-		avg_time = sum(times) / len(times)
-		if filename.startswith('random'):
-			key = 'random'
-		elif filename.startswith('sorted'):
-			key = 'sorted'
-		elif filename.startswith('reverse_sorted'):
-			key = 'reverse_sorted'
-		else:
-			key = 'random'  # fallback
-		results[key]['sizes'].append(n)
-		results[key]['times'].append(avg_time)
-		print(f"File: {filename} | Input size: {n}, Average time over {num_runs} runs: {avg_time:.6f} seconds")
-	print("******* Insertion Sort Finished *******")
-	return results
+def main(inputs_dict):
+    print("Running Insertion Sort...")
+    results = {
+        'random': {'sizes': [], 'times': []},
+        'sorted': {'sizes': [], 'times': []},
+        'reverse_sorted': {'sizes': [], 'times': []}
+    }
+    for key in ['random', 'sorted', 'reverse_sorted']:
+        for n, arr in inputs_dict.get(key, {}).items():
+            times = []
+            num_runs = 3 if n > 10000 else 5
+            for _ in range(num_runs):
+                arr_copy = arr.copy()
+                start = time.perf_counter()
+                insertion_sort(arr_copy)
+                end = time.perf_counter()
+                times.append(end - start)
+            avg_time = sum(times) / len(times)
+            results[key]['sizes'].append(n)
+            results[key]['times'].append(avg_time)
+            print(f"{key.capitalize()} Input size: {n}, Average time over {num_runs} runs: {avg_time:.6f} seconds")
+    print("******* Insertion Sort Finished *******")
+    return results
 
-def get_results():
-	return main()
 
-if __name__ == "__main__":
-	main()
+def get_results(inputs_dict):
+    return main(inputs_dict)

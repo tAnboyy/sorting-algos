@@ -1,9 +1,12 @@
 # Compare sorting algorithms: plot random, sorted, reverse sorted input timings for all algorithms
+
 import os
 import importlib.util
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import numpy as np
+import random
 
 SORT_FILES = [
     'insertion_sort.py',
@@ -33,19 +36,34 @@ RESULTS = {
     'reverse_sorted': {},
 }
 
-# Each sort file should have a function: get_results() returning a dict like {'random': {'sizes': [...], 'times': [...]}, ...}
-def get_results_from_file(file_path):
+
+# Each sort file should have a function: get_results(inputs_dict) returning a dict like {'random': {'sizes': [...], 'times': [...]}, ...}
+def get_results_from_file(file_path, inputs_dict):
     spec = importlib.util.spec_from_file_location('sortmod', file_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     if hasattr(mod, 'get_results'):
-        return mod.get_results()
+        return mod.get_results(inputs_dict)
     return {}
 
 def main():
+
+    # Use only the specified sizes
+    sizes = [1000, 2000, 3000, 4000, 5000, 10000, 20000, 40000, 50000, 60000, 80000, 90000, 100000]
+
+    # Generate dynamic inputs for each type and size
+    dynamic_inputs = {'random': {}, 'sorted': {}, 'reverse_sorted': {}}
+    for size in sizes:
+        arr = [random.randint(0, 10**6) for _ in range(size)]
+        dynamic_inputs['random'][size] = arr.copy()
+        arr_sorted = sorted(arr)
+        dynamic_inputs['sorted'][size] = arr_sorted.copy()
+        dynamic_inputs['reverse_sorted'][size] = arr_sorted[::-1]
+
+    # For each sorting algorithm, call get_results(inputs_dict)
     for sort_file, label in zip(SORT_FILES, SORT_LABELS):
         file_path = os.path.join(os.path.dirname(__file__), sort_file)
-        results = get_results_from_file(file_path)
+        results = get_results_from_file(file_path, dynamic_inputs)
         for key in RESULTS:
             if key in results:
                 RESULTS[key][label] = (results[key]['sizes'], results[key]['times'])
